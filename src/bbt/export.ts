@@ -811,11 +811,16 @@ export async function exportToMarkdown(
       if (!rendered) continue;
 
       if (file) {
-        await app.vault.modify(file, rendered);
-      } else {
-        await mkMDDir(markdownPath);
-        await app.vault.create(markdownPath, rendered);
+        new Notice(
+          `Note already exists, opening instead of overwriting: ${file.path}`,
+          7000
+        );
+        await app.workspace.getLeaf(false).openFile(file);
+        continue;
       }
+
+      await mkMDDir(markdownPath);
+      await app.vault.create(markdownPath, rendered);
 
       createdOrUpdatedMarkdownFiles.push(markdownPath);
     } catch (e) {

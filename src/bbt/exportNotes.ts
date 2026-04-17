@@ -271,7 +271,10 @@ export async function newFile(
 
   try {
     if (file) {
-      await app.vault.modify(file, content);
+      new Notice(
+        `Note already exists, opening instead of overwriting: ${file.path}`,
+        7000
+      );
     } else {
       await mkMDDir(path);
       file = await app.vault.create(path, content);
